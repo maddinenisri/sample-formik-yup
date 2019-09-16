@@ -16,7 +16,13 @@ const validationSchema = Yup.object().shape({
   address: Yup.string().required("Address is required field"),
   city: Yup.string()
     .matches(alpha, { message: "Enter Valid Name", excludeEmptyString: true })
-    .required("City is required field")
+    .required("City is required field"),
+  occupation: Yup.string()
+    .test("county", "cannot be empty", value => value !== "Please Select")
+    .required("required"),
+  terms: Yup.string()
+    .test("terms", "you must agree to terms", value => value !== false)
+    .required("required")
 });
 
 const fields = [
@@ -33,7 +39,20 @@ const fields = [
     placeholder: "Last Name"
   },
   { label: "City", type: "input", name: "city", placeholder: "City" },
-  { label: "Address", type: "input", name: "address", placeholder: "Address" }
+  { label: "Address", type: "input", name: "address", placeholder: "Address" },
+  {
+    label: "Occupation",
+    type: "select",
+    data: ["Teacher", "Software Engineer", "Doctor", "Lawyer"],
+    name: "occupation",
+    value: "Please Select"
+  },
+  {
+    label: "Agree to Terms & Conditions",
+    type: "checkbox",
+    name: "terms",
+    value: false
+  }
 ];
 
 const SampleForm = props => (

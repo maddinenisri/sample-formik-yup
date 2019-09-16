@@ -19,23 +19,92 @@ const getInitialValues = fields => {
   return initialValues;
 };
 
-const renderFields = (fields, values, errors, touched) => {
+const renderCheckBox = (field, form) => {
+  return (
+    <div className="form-group" key={field.name}>
+      <div className={combineClassNames(field, form.errors, form.touched, "form-check form-control")}>
+        <label htmlFor={field.name} className="form-check-label">
+          <Field
+            name={field.name}
+            id={field.name}
+            type="checkbox"
+            error={form.errors[field.name]}
+            value={form.values[field.name]}
+            checked={form.values[field.name]}
+            className={combineClassNames(field, form.errors, form.touched, "form-check-input")}
+          />
+          {field.label}
+        </label>
+      </div>
+      <ErrorMessage
+          component="div"
+          name={field.name}
+          className="invalid-feedback"
+        />
+    </div>
+  );
+};
+
+const renderSelectField = (field, form) => {
+  const defaultOption = (
+    <option key="default" value="Please Select">
+      Please Select
+    </option>
+  );
+  const options = field.data.map(i => (
+    <option key={i} value={i}>
+      {" "}
+      {i}{" "}
+    </option>
+  ));
+  const selectOptions = [defaultOption, ...options];
+  return (
+    <div className="form-group" key={field.name}>
+      <label htmlFor={field.name}>{field.label}</label>
+      <Field
+        component="select"
+        name={field.name}
+        value={form.values[field.name]}
+        error={form.errors[field.name]}
+        placeholder={field.placeholder}
+        className={combineClassNames(field, form.errors, form.touched, "form-control")}
+      >
+        {selectOptions}
+      </Field>
+      <ErrorMessage
+        component="div"
+        name={field.name}
+        className="invalid-feedback"
+      />
+    </div>
+  );
+};
+
+const combineClassNames = (field, errors, touched, baseClassNames) =>
+  classNames(baseClassNames, {
+    "is-success": field.value || (!errors[field.name] && touched[field.name]),
+    "is-invalid": errors[field.name] && touched[field.name]
+  });
+
+const renderFields = (fields, form) => {
   return fields.map(field => {
-    const classes = classNames("form-control", {
-      "is-success": field.value || (!errors[field.name] && touched[field.name]),
-      "is-invalid": errors[field.name] && touched[field.name]
-    });
+    if (field.type === "select") {
+      return renderSelectField(field, form);
+    }
+
+    if (field.type === "checkbox") {
+      return renderCheckBox(field, form);
+    }
     return (
       <div className="form-group" key={field.name}>
         <label htmlFor={field.name}>{field.label}</label>
         <Field
           type={field.type}
           name={field.name}
-          value={values[field.name]}
-          error={errors[field.name]}
-          touched={touched[field.name]}
+          value={form.values[field.name]}
+          error={form.errors[field.name]}
           placeholder={field.placeholder}
-          className={classes}
+          className={combineClassNames(field, form.errors, form.touched, "form-control")}
         />
         <ErrorMessage
           component="div"
@@ -61,10 +130,10 @@ const DynamicForm = ({ fields, validationSchema }) => {
             validationSchema={validationSchema}
             onSubmit={handleSubmit}
             initialValues={getInitialValues(fields)}
-            render={({ values, errors, touched, isSubmitting }) => (
+            render={form => (
               <Form>
-                {renderFields(fields, values, errors, touched)}
-                <button type="submit" disabled={isSubmitting}>
+                {renderFields(fields, form)}
+                <button type="submit" disabled={form.isSubmitting}>
                   Submit
                 </button>
               </Form>
