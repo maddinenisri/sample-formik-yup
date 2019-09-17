@@ -19,7 +19,7 @@ const getInitialValues = fields => {
   return initialValues;
 };
 
-const renderCheckBox = (field, form) => {
+const renderCheckBox = field => {
   return (
     <Field
       key={field.name}
@@ -29,7 +29,7 @@ const renderCheckBox = (field, form) => {
   );
 };
 
-const renderSelectField = (field, form) => {
+const renderSelectField = field => {
   const defaultOption = (
     <option key="default" value="Please Select">
       Please Select
@@ -58,14 +58,14 @@ const renderSelectField = (field, form) => {
   );
 };
 
-const renderFields = (fields, form) => {
+const renderFields = fields => {
   return fields.map(field => {
     if (field.type === "select") {
-      return renderSelectField(field, form);
+      return renderSelectField(field);
     }
 
     if (field.type === "checkbox") {
-      return renderCheckBox(field, form);
+      return renderCheckBox(field);
     }
     return (
       <Field
@@ -100,7 +100,7 @@ const DynamicForm = ({ fields, validationSchema }) => {
             initialValues={getInitialValues(fields)}
             render={form => (
               <Form>
-                {renderFields(fields, form)}
+                {renderFields(fields)}
                 <button type="submit" disabled={form.isSubmitting}>
                   Submit
                 </button>

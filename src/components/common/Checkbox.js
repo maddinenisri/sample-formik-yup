@@ -11,20 +11,22 @@ const Checkbox = ({ label, field, form }) => {
           field,
           form.errors,
           form.touched,
-          "form-check form-control"
+          "form-control"
         )}
       >
-        <label htmlFor={field.name} className="form-check-label">
-          <input
-            name={field.name}
-            type="checkbox"
-            value={form.values[field.name]}
-            checked={form.values[field.name]}
-            onChange={form.handleChange}
-            className={classNames("form-check-input")}
-          />
-          {label}
-        </label>
+        <div className="form-check">
+          <label htmlFor={field.name} className="form-check-label">
+            <input
+              name={field.name}
+              type="checkbox"
+              value={form.values[field.name]}
+              checked={form.values[field.name]}
+              onChange={form.handleChange}
+              className={classNames("form-check-input")}
+            />
+            {label}
+          </label>
+        </div>
       </div>
       <ErrorMessage
         component="div"
