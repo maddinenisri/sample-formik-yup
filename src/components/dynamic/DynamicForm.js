@@ -1,6 +1,6 @@
 import React from "react";
-import { Formik, Form, FieldArray, Field, ErrorMessage } from "formik";
-import classNames from "classnames";
+import { Formik, Form, Field } from "formik";
+import { TextField, SelectBox, Checkbox } from "../common";
 
 const handleSubmit = (values, actions) => {
   setTimeout(() => {
@@ -21,27 +21,11 @@ const getInitialValues = fields => {
 
 const renderCheckBox = (field, form) => {
   return (
-    <div className="form-group" key={field.name}>
-      <div className={combineClassNames(field, form.errors, form.touched, "form-check form-control")}>
-        <label htmlFor={field.name} className="form-check-label">
-          <Field
-            name={field.name}
-            id={field.name}
-            type="checkbox"
-            error={form.errors[field.name]}
-            value={form.values[field.name]}
-            checked={form.values[field.name]}
-            className={combineClassNames(field, form.errors, form.touched, "form-check-input")}
-          />
-          {field.label}
-        </label>
-      </div>
-      <ErrorMessage
-          component="div"
-          name={field.name}
-          className="invalid-feedback"
-        />
-    </div>
+    <Field
+      key={field.name}
+      name={field.name}
+      render={innerProps => <Checkbox label={field.label} {...innerProps} />}
+    />
   );
 };
 
@@ -59,32 +43,20 @@ const renderSelectField = (field, form) => {
   ));
   const selectOptions = [defaultOption, ...options];
   return (
-    <div className="form-group" key={field.name}>
-      <label htmlFor={field.name}>{field.label}</label>
-      <Field
-        component="select"
-        name={field.name}
-        value={form.values[field.name]}
-        error={form.errors[field.name]}
-        placeholder={field.placeholder}
-        className={combineClassNames(field, form.errors, form.touched, "form-control")}
-      >
-        {selectOptions}
-      </Field>
-      <ErrorMessage
-        component="div"
-        name={field.name}
-        className="invalid-feedback"
-      />
-    </div>
+    <Field
+      key={field.name}
+      name={field.name}
+      render={innerProps => (
+        <SelectBox
+          label={field.label}
+          placeholder={field.placeholder}
+          options={selectOptions}
+          {...innerProps}
+        />
+      )}
+    />
   );
 };
-
-const combineClassNames = (field, errors, touched, baseClassNames) =>
-  classNames(baseClassNames, {
-    "is-success": field.value || (!errors[field.name] && touched[field.name]),
-    "is-invalid": errors[field.name] && touched[field.name]
-  });
 
 const renderFields = (fields, form) => {
   return fields.map(field => {
@@ -96,22 +68,18 @@ const renderFields = (fields, form) => {
       return renderCheckBox(field, form);
     }
     return (
-      <div className="form-group" key={field.name}>
-        <label htmlFor={field.name}>{field.label}</label>
-        <Field
-          type={field.type}
-          name={field.name}
-          value={form.values[field.name]}
-          error={form.errors[field.name]}
-          placeholder={field.placeholder}
-          className={combineClassNames(field, form.errors, form.touched, "form-control")}
-        />
-        <ErrorMessage
-          component="div"
-          name={field.name}
-          className="invalid-feedback"
-        />
-      </div>
+      <Field
+        key={field.name}
+        name={field.name}
+        render={innerProps => (
+          <TextField
+            label={field.label}
+            name={field.name}
+            placeholder={field.placeholder}
+            {...innerProps}
+          />
+        )}
+      />
     );
   });
 };
