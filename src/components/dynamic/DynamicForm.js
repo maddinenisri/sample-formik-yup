@@ -89,7 +89,7 @@ const DynamicForm = ({ fields, validationSchema }) => {
     <div className="container">
       <div className="row mb-5">
         <div className="col-lg-12 text-center">
-          <h1 className="mt-5">Register Form</h1>
+          <h1 className="mt-5">Dynamic Form</h1>
         </div>
       </div>
       <div className="row">
@@ -101,9 +101,18 @@ const DynamicForm = ({ fields, validationSchema }) => {
             render={form => (
               <Form>
                 {renderFields(fields)}
-                <button type="submit" disabled={form.isSubmitting}>
-                  Submit
-                </button>
+                <div className="form-group">
+                  <button
+                    className="btn btn-primary mr-2"
+                    type="submit"
+                    disabled={form.isSubmitting}
+                  >
+                    Submit
+                  </button>
+                  <button type="reset" className="btn btn-secondary">
+                    Reset
+                  </button>
+                </div>
               </Form>
             )}
           />
