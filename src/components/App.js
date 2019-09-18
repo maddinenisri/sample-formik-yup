@@ -1,27 +1,31 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
-import LoginForm from "./Login";
-import Header from "./Header";
-import RegisterForm from "./Register";
-import SampleForm from "./SampleForm";
-import MultiFormFields from "./MultiFormFields";
-import SampleComponent from './pubsub/SampleComponent';
+import withLazyLoader from '../hoc/LazyLoader';
 import "bootstrap/dist/css/bootstrap.css";
 
-const App = props => (
+const LoginForm = React.lazy(() => import("./Login"));
+const Header = React.lazy(() => import("./Header"));
+const RegisterForm = React.lazy(() => import("./Register"));
+const SampleForm = withLazyLoader(() => import("./SampleForm"));
+const MultiFormFields = React.lazy(() => import("./MultiFormFields"));
+const SampleComponent = React.lazy(() => import("./pubsub/SampleComponent"));
+
+const App = () => (
   <BrowserRouter>
-    <div className="container">
-      <Header />
-    </div>
-    <div className="container-fluid">
-      <Switch>
-        <Route path="/" exact component={LoginForm} />
-        <Route path="/register" component={RegisterForm} />
-        <Route path="/multiCheckbox" component={MultiFormFields} />
-        <Route path="/dynamicForm" component={SampleForm} />
-        <Route path="/pubsub" component={SampleComponent} />
-      </Switch>
-    </div>
+    <Suspense fallback={<div>Loading…</div>}>
+      <div className="container">
+        <Header />
+      </div>
+      <div className="container-fluid">
+        <Switch>
+          <Route path="/" exact component={LoginForm} />
+          <Route path="/register" component={RegisterForm} />
+          <Route path="/multiCheckbox" component={MultiFormFields} />
+          <Route path="/dynamicForm" component={SampleForm} />
+          <Route path="/pubsub" component={SampleComponent} />
+        </Switch>
+      </div>
+    </Suspense>
   </BrowserRouter>
 );
 
