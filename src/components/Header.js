@@ -16,6 +16,9 @@ const Header = () => (
     <Link className="navbar-brand" to="/dynamicForm">
       Dynamic Form
     </Link>
+    <Link className="navbar-brand" to="/pubsub">
+      PubSub Component
+    </Link>
   </nav>
 );
 

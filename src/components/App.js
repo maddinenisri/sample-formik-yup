@@ -5,6 +5,7 @@ import Header from "./Header";
 import RegisterForm from "./Register";
 import SampleForm from "./SampleForm";
 import MultiFormFields from "./MultiFormFields";
+import SampleComponent from './pubsub/SampleComponent';
 import "bootstrap/dist/css/bootstrap.css";
 
 const App = props => (
@@ -18,6 +19,7 @@ const App = props => (
         <Route path="/register" component={RegisterForm} />
         <Route path="/multiCheckbox" component={MultiFormFields} />
         <Route path="/dynamicForm" component={SampleForm} />
+        <Route path="/pubsub" component={SampleComponent} />
       </Switch>
     </div>
   </BrowserRouter>
