@@ -1,31 +1,38 @@
 import React from "react";
 import classNames from "classnames";
-import InputFeedback from "./InputFeedback";
+import { ErrorMessage } from "formik";
+import { combineClassNames } from "./Util";
 
-const Checkbox = ({
-  field: { name, value, onChange, onBlur },
-  form: { errors, touched, setFieldValue },
-  id,
-  label,
-  className,
-  ...props
-}) => {
+const Checkbox = ({ label, field, form }) => {
   return (
-    <div className="form-check">
-      <label htmlFor={id} className="form-check-label">
-        <input
-          name={name}
-          id={id}
-          type="checkbox"
-          value={value}
-          checked={value}
-          onChange={onChange}
-          onBlur={onBlur}
-          className={classNames("form-check-input")}
-        />
-        {label}
-      </label>
-      {touched[name] && <InputFeedback error={errors[name]} />}
+    <div className="form-group">
+      <div
+        className={combineClassNames(
+          field,
+          form.errors,
+          form.touched,
+          "form-control"
+        )}
+      >
+        <div className="form-check">
+          <label htmlFor={field.name} className="form-check-label">
+            <input
+              name={field.name}
+              type="checkbox"
+              value={form.values[field.name]}
+              checked={form.values[field.name]}
+              onChange={form.handleChange}
+              className={classNames("form-check-input")}
+            />
+            {label}
+          </label>
+        </div>
+      </div>
+      <ErrorMessage
+        component="div"
+        name={field.name}
+        className="invalid-feedback"
+      />
     </div>
   );
 };

@@ -7,9 +7,9 @@ const CheckboxGroup = props => {
     const target = event.currentTarget;
     let valueArray = [...props.value] || [];
     if (target.checked) {
-      valueArray.push(target.id);
+      valueArray.push(target.name);
     } else {
-      valueArray.splice(valueArray.indexOf(target.id), 1);
+      valueArray.splice(valueArray.indexOf(target.name), 1);
     }
     props.onChange(props.id, valueArray);
   };
@@ -34,11 +34,18 @@ const CheckboxGroup = props => {
       <div className={classes}>
         <label>{label}</label>
         {React.Children.map(children, child => {
+          const name = child.props.id;
           return React.cloneElement(child, {
             field: {
-              value: value.includes(child.props.id),
-              onChange: handleChange,
-              onBlur: handleBlur
+              name: name,
+              value: value.includes(child.props.id)
+            },
+            form: {
+              values: { name: value.includes(child.props.id) },
+              handleChange: handleChange,
+              handleBlur: handleBlur,
+              errors: { name: undefined },
+              touched: { name: false }
             }
           });
         })}

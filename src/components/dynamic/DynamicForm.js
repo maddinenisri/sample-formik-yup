@@ -1,6 +1,6 @@
 import React from "react";
-import { Formik, Form, FieldArray, Field, ErrorMessage } from "formik";
-import classNames from "classnames";
+import { Formik, Form, Field } from "formik";
+import { TextField, SelectBox, Checkbox } from "../common";
 
 const handleSubmit = (values, actions) => {
   setTimeout(() => {
@@ -19,33 +19,17 @@ const getInitialValues = fields => {
   return initialValues;
 };
 
-const renderCheckBox = (field, form) => {
+const renderCheckBox = field => {
   return (
-    <div className="form-group" key={field.name}>
-      <div className={combineClassNames(field, form.errors, form.touched, "form-check form-control")}>
-        <label htmlFor={field.name} className="form-check-label">
-          <Field
-            name={field.name}
-            id={field.name}
-            type="checkbox"
-            error={form.errors[field.name]}
-            value={form.values[field.name]}
-            checked={form.values[field.name]}
-            className={combineClassNames(field, form.errors, form.touched, "form-check-input")}
-          />
-          {field.label}
-        </label>
-      </div>
-      <ErrorMessage
-          component="div"
-          name={field.name}
-          className="invalid-feedback"
-        />
-    </div>
+    <Field
+      key={field.name}
+      name={field.name}
+      render={innerProps => <Checkbox label={field.label} {...innerProps} />}
+    />
   );
 };
 
-const renderSelectField = (field, form) => {
+const renderSelectField = field => {
   const defaultOption = (
     <option key="default" value="Please Select">
       Please Select
@@ -59,59 +43,43 @@ const renderSelectField = (field, form) => {
   ));
   const selectOptions = [defaultOption, ...options];
   return (
-    <div className="form-group" key={field.name}>
-      <label htmlFor={field.name}>{field.label}</label>
-      <Field
-        component="select"
-        name={field.name}
-        value={form.values[field.name]}
-        error={form.errors[field.name]}
-        placeholder={field.placeholder}
-        className={combineClassNames(field, form.errors, form.touched, "form-control")}
-      >
-        {selectOptions}
-      </Field>
-      <ErrorMessage
-        component="div"
-        name={field.name}
-        className="invalid-feedback"
-      />
-    </div>
+    <Field
+      key={field.name}
+      name={field.name}
+      render={innerProps => (
+        <SelectBox
+          label={field.label}
+          placeholder={field.placeholder}
+          options={selectOptions}
+          {...innerProps}
+        />
+      )}
+    />
   );
 };
 
-const combineClassNames = (field, errors, touched, baseClassNames) =>
-  classNames(baseClassNames, {
-    "is-success": field.value || (!errors[field.name] && touched[field.name]),
-    "is-invalid": errors[field.name] && touched[field.name]
-  });
-
-const renderFields = (fields, form) => {
+const renderFields = fields => {
   return fields.map(field => {
     if (field.type === "select") {
-      return renderSelectField(field, form);
+      return renderSelectField(field);
     }
 
     if (field.type === "checkbox") {
-      return renderCheckBox(field, form);
+      return renderCheckBox(field);
     }
     return (
-      <div className="form-group" key={field.name}>
-        <label htmlFor={field.name}>{field.label}</label>
-        <Field
-          type={field.type}
-          name={field.name}
-          value={form.values[field.name]}
-          error={form.errors[field.name]}
-          placeholder={field.placeholder}
-          className={combineClassNames(field, form.errors, form.touched, "form-control")}
-        />
-        <ErrorMessage
-          component="div"
-          name={field.name}
-          className="invalid-feedback"
-        />
-      </div>
+      <Field
+        key={field.name}
+        name={field.name}
+        render={innerProps => (
+          <TextField
+            label={field.label}
+            name={field.name}
+            placeholder={field.placeholder}
+            {...innerProps}
+          />
+        )}
+      />
     );
   });
 };
@@ -121,7 +89,7 @@ const DynamicForm = ({ fields, validationSchema }) => {
     <div className="container">
       <div className="row mb-5">
         <div className="col-lg-12 text-center">
-          <h1 className="mt-5">Register Form</h1>
+          <h1 className="mt-5">Dynamic Form</h1>
         </div>
       </div>
       <div className="row">
@@ -132,10 +100,19 @@ const DynamicForm = ({ fields, validationSchema }) => {
             initialValues={getInitialValues(fields)}
             render={form => (
               <Form>
-                {renderFields(fields, form)}
-                <button type="submit" disabled={form.isSubmitting}>
-                  Submit
-                </button>
+                {renderFields(fields)}
+                <div className="form-group">
+                  <button
+                    className="btn btn-primary mr-2"
+                    type="submit"
+                    disabled={form.isSubmitting}
+                  >
+                    Submit
+                  </button>
+                  <button type="reset" className="btn btn-secondary">
+                    Reset
+                  </button>
+                </div>
               </Form>
             )}
           />

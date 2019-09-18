@@ -18,11 +18,11 @@ const validationSchema = Yup.object().shape({
     .matches(alpha, { message: "Enter Valid Name", excludeEmptyString: true })
     .required("City is required field"),
   occupation: Yup.string()
-    .test("county", "cannot be empty", value => value !== "Please Select")
+    .test('occupation', "cannot be empty", value => value !== "Please Select")
     .required("required"),
-  terms: Yup.string()
-    .test("terms", "you must agree to terms", value => value !== false)
-    .required("required")
+  terms: Yup.boolean()
+    .test('terms', "you must agree to terms", value => value !== false)
+    .required("required"),
 });
 
 const fields = [
